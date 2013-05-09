@@ -39,6 +39,7 @@ module XAccelRedirect
     #   Defaults to 'X-Sendfile'.
     # * <tt>:file_paths</tt> - list of acceptible file paths
     # * <tt>:root</tt> - the root directory is removed when file path specified in header
+    # * <tt>:public_root</tt> - the public root directory is prepended to file path specified in header
     #
     # Simple download:
     #   x_accel_redirect '/path/to/file'
@@ -70,6 +71,7 @@ module XAccelRedirect
 
       #remove the root
       path = File.expand_path(path).gsub(options[:root], '') if options[:root]
+      path = File.join(options[:public_root], path) if options[:public_root]
 
       response.headers[options[:header]] = path
       logger.info "Sending XAccelRedirect header for #{path}" unless logger.nil?
